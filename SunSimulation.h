@@ -1,6 +1,6 @@
-//
-// Created by Artem Botnev on 10/16/2018
-//
+// SunSimulation
+// Copyright Artem Botnev 2018
+// MIT License
 
 #ifndef SUNSIMULATION_H
 #define SUNSIMULATION_H
@@ -19,7 +19,7 @@ public:
 
     uint8_t getMinute();
 
-    uint8_t getDuration();
+    uint16_t getDuration();
 
 private:
     uint8_t _hour;
@@ -30,7 +30,12 @@ private:
 class SunSimulation {
 public:
     SunSimulation(TimeSet *sunRise, TimeSet *sunSet);
+    
     char *regimenInit();
+    
+    char *reloadRegimen(TimeSet *sunRise, TimeSet *sunSet);
+    
+    uint8_t changeBrightness(uint8_t hour, uint8_t minute, uint8_t second, uint8_t *brightness);
 
 private:
     TimeSet *_sunRise;
@@ -44,6 +49,7 @@ private:
     bool _optionsOk;
 
     bool haveTimeError(TimeSet *set);
+    
     uint32_t getSecondsFromStart(TimeSet *sunRise, uint32_t curHour, uint32_t curMinute, uint32_t curSecond);
 };
 

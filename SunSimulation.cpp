@@ -1,6 +1,6 @@
-//
-// Created by Artem Botnev on 10/16/2018
-//
+// SunSimulation
+// Copyright Artem Botnev 2018
+// MIT License
 
 #include "SunSimulation.h"
 
@@ -52,13 +52,52 @@ char *SunSimulation::regimenInit() {
     return "successful initialization\0";
 }
 
+char *SunSimulation::reloadRegimen(TimeSet *sunRise, TimeSet *sunSet) {
+    delete _sunRise;
+    delete _sunSet;
+
+    _sunRise = sunRise;
+    _sunSet = sunSet;
+
+    return regimenInit();
+}
+
+uint8_t SunSimulation::changeBrightness(uint8_t hour, uint8_t minute, uint8_t second, uint8_t *brightness) {
+    if (!_optionsOk) {
+        // errors of initialisation
+        return 0;
+    }
+
+    uint32_t currentSecond = getSecondsFromStart(_startPoint, hour, minute, second);
+
+    if (currentSecond < 0) {
+        // error of current time
+        return 0;
+    }
+
+    uint32_t gap;
+
+    if (currentSecond > _endRise && currentSecond < _startSet) {
+        *brightness = PWM_MAX;
+    } else if (currentSecond > _endSet) {
+        *brightness = 0;
+    } else if (currentSecond >= START_RISE && currentSecond <= _endRise) {
+        *brightness = PWM_MAX * currentSecond / _endRise;
+    } else if (currentSecond >= _startSet && currentSecond <= _endSet) {
+        uint32_t curFromStart = currentSecond - _startSet;
+        uint32_t setDuration = _endSet - _startSet;
+        *brightness = PWM_MAX - (PWM_MAX * curFromStart / setDuration);
+    }
+
+    return *brightness;
+}
+
 bool SunSimulation::haveTimeError(TimeSet *set) {
     return set->getHour() > 23 || set->getHour() < 0 || set->getMinute() > 59 ||
            set->getMinute() < 0 || set->getDuration() > 120 || set->getDuration() < 5;
 }
 
-uint32_t SunSimulation::
-getSecondsFromStart(TimeSet *sunRise, uint32_t curHour, uint32_t curMinute, uint32_t curSecond) {
+uint32_t SunSimulation::getSecondsFromStart(TimeSet *sunRise, uint32_t curHour, uint32_t curMinute, uint32_t curSecond) {
     // seconds
     uint32_t gap;
 
