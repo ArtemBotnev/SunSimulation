@@ -1,0 +1,27 @@
+#########################################
+# Syntax Coloring Map For SunSimulation
+#########################################
+
+#########################################
+# Datatypes (KEYWORD1)
+#########################################
+
+TimeSet			KEYWORD1	SunSimulation
+SunSimulation	KEYWORD1	SunSimulation
+
+#########################################
+# Methods and Functions (KEYWORD2)
+#########################################
+getHour				KEYWORD2
+getMinute			KEYWORD2
+getDuration			KEYWORD2
+regimenInit			KEYWORD2
+reloadRegimen		KEYWORD2
+changeBrightness	KEYWORD2
+
+#########################################
+# Constants (LITERAL1)
+#########################################
+START_RISE		LITERAL1
+PWM_MAX			LITERAL1
+DAY_SECONDS		LITERAL1
