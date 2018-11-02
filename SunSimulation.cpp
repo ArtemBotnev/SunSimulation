@@ -27,6 +27,11 @@ SunSimulation::SunSimulation(TimeSet *sunRise, TimeSet *sunSet) {
     _sunSet = sunSet;
 }
 
+SunSimulation::SunSimulation(TimeSet *sunRise, TimeSet *sunSet, uint8_t *brightness)
+:   SunSimulation(sunRise, sunSet) {
+   _brightness = brightness;
+}
+
 char *SunSimulation::regimenInit() {
     if (haveTimeError(_sunRise) || haveTimeError(_sunSet)) {
         return "time input error\0";
@@ -90,6 +95,10 @@ uint8_t SunSimulation::changeBrightness(uint8_t hour, uint8_t minute, uint8_t se
     }
 
     return *brightness;
+}
+
+uint8_t SunSimulation::changeBrightness(uint8_t hour, uint8_t minute, uint8_t second) {
+    return changeBrightness(hour, minute, second, _brightness);
 }
 
 bool SunSimulation::haveTimeError(TimeSet *set) {

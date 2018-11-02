@@ -31,11 +31,15 @@ class SunSimulation {
 public:
     SunSimulation(TimeSet *sunRise, TimeSet *sunSet);
     
+    SunSimulation(TimeSet *sunRise, TimeSet *sunSet, uint8_t *brightness);
+    
     char *regimenInit();
     
     char *reloadRegimen(TimeSet *sunRise, TimeSet *sunSet);
     
     uint8_t changeBrightness(uint8_t hour, uint8_t minute, uint8_t second, uint8_t *brightness);
+    
+    uint8_t changeBrightness(uint8_t hour, uint8_t minute, uint8_t second);
 
 private:
     TimeSet *_sunRise;
@@ -47,6 +51,7 @@ private:
     uint32_t _endSet;
     // true if there is not initialization errors
     bool _optionsOk;
+    uint8_t *_brightness;
 
     bool haveTimeError(TimeSet *set);
     
