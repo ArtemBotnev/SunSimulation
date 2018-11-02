@@ -44,4 +44,15 @@ Also we can change our previous regimen during loop() run:
 ```c++
 s->reloadRegimen(newSunrise, newSunset);
 ```
+Note: <br>
+We can use another constructor and set brightness variable pointer once.
+And then invoke changeBrightness with only three parameters.
+
+```c++
+// second constructor
+s = new SunSimulation(sunrise, sunset, &br);
+
+s->changeBrightness(6, 35, 43);
+```
+
 Enjoy!
