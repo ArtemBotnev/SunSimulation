@@ -33,9 +33,9 @@ public:
     
     SunSimulation(TimeSet *sunRise, TimeSet *sunSet, uint8_t *brightness);
     
-    char *regimenInit();
+    const char *regimenInit();
     
-    char *reloadRegimen(TimeSet *sunRise, TimeSet *sunSet);
+    const char *reloadRegimen(TimeSet *sunRise, TimeSet *sunSet);
     
     uint8_t changeBrightness(uint8_t hour, uint8_t minute, uint8_t second, uint8_t *brightness);
     

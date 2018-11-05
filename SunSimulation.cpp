@@ -32,9 +32,9 @@ SunSimulation::SunSimulation(TimeSet *sunRise, TimeSet *sunSet, uint8_t *brightn
    _brightness = brightness;
 }
 
-char *SunSimulation::regimenInit() {
+const char *SunSimulation::regimenInit() {
     if (haveTimeError(_sunRise) || haveTimeError(_sunSet)) {
-        return "time input error\0";
+        return "time input error";
     }
 
     // get time (seconds) since sunrise start
@@ -42,22 +42,22 @@ char *SunSimulation::regimenInit() {
     _startSet = getSecondsFromStart(_sunRise, _sunSet->getHour(), _sunSet->getMinute(), 0);
 
     if (_startSet < 60) {
-        return "time input error, too small a gap between sunrise and sunset\0";
+        return "time input error, too small a gap between sunrise and sunset";
     }
 
     _endSet = _startSet + _sunSet->getDuration() * 60;
 
     if (_endSet > DAY_SECONDS || _endRise > _startSet) {
-        return "time input error, intersection of sunrise and sunset regiments\0";
+        return "time input error, intersection of sunrise and sunset regiments";
     }
 
     _optionsOk = true;
     _startPoint = _sunRise;
 
-    return "successful initialization\0";
+    return "successful initialization";
 }
 
-char *SunSimulation::reloadRegimen(TimeSet *sunRise, TimeSet *sunSet) {
+const char *SunSimulation::reloadRegimen(TimeSet *sunRise, TimeSet *sunSet) {
     delete _sunRise;
     delete _sunSet;
 
@@ -75,18 +75,11 @@ uint8_t SunSimulation::changeBrightness(uint8_t hour, uint8_t minute, uint8_t se
 
     uint32_t currentSecond = getSecondsFromStart(_startPoint, hour, minute, second);
 
-    if (currentSecond < 0) {
-        // error of current time
-        return 0;
-    }
-
-    uint32_t gap;
-
     if (currentSecond > _endRise && currentSecond < _startSet) {
         *brightness = PWM_MAX;
     } else if (currentSecond > _endSet) {
         *brightness = 0;
-    } else if (currentSecond >= START_RISE && currentSecond <= _endRise) {
+    } else if (currentSecond <= _endRise) {
         *brightness = PWM_MAX * currentSecond / _endRise;
     } else if (currentSecond >= _startSet && currentSecond <= _endSet) {
         uint32_t curFromStart = currentSecond - _startSet;
@@ -102,8 +95,7 @@ uint8_t SunSimulation::changeBrightness(uint8_t hour, uint8_t minute, uint8_t se
 }
 
 bool SunSimulation::haveTimeError(TimeSet *set) {
-    return set->getHour() > 23 || set->getHour() < 0 || set->getMinute() > 59 ||
-           set->getMinute() < 0 || set->getDuration() > 120 || set->getDuration() < 5;
+    return set->getHour() > 23 || set->getMinute() > 59 || set->getDuration() > 120 || set->getDuration() < 5;
 }
 
 uint32_t SunSimulation::getSecondsFromStart(TimeSet *sunRise, uint32_t curHour, uint32_t curMinute, uint32_t curSecond) {
