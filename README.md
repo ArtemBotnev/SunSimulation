@@ -55,4 +55,4 @@ s = new SunSimulation(sunrise, sunset, &br);
 s->changeBrightness(6, 35, 43);
 ```
 
-Enjoy!
+For more details see example
