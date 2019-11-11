@@ -94,6 +94,27 @@ uint8_t SunSimulation::changeBrightness(uint8_t hour, uint8_t minute, uint8_t se
     return changeBrightness(hour, minute, second, _brightness);
 }
 
+TimeState SunSimulation::getCurrentTimeState(uint8_t hour, uint8_t minute, uint8_t second) {
+    if (!_optionsOk) {
+        // errors of initialisation
+        return NOT_DEFINED;
+    }
+
+    uint32_t currentSecond = getSecondsFromStart(_startPoint, hour, minute, second);
+
+    if (currentSecond > _endRise && currentSecond < _startSet) {
+        return DAY;
+    } else if (currentSecond > _endSet) {
+        return NIGHT;
+    } else if (currentSecond <= _endRise) {
+        return SUNRISE;
+    } else if (currentSecond >= _startSet && currentSecond <= _endSet) {
+        return SUNSET;
+    }
+
+    return NOT_DEFINED;
+}
+
 bool SunSimulation::haveTimeError(TimeSet *set) {
     return set->getHour() > 23 || set->getMinute() > 59 || set->getDuration() > 120 || set->getDuration() < 5;
 }
@@ -118,4 +139,3 @@ uint32_t SunSimulation::getSecondsFromStart(TimeSet *sunRise, uint32_t curHour, 
 
     return gap;
 }
-

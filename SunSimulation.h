@@ -11,6 +11,8 @@
 #define PWM_MAX 255
 #define DAY_SECONDS 86400
 
+enum TimeState { DAY, NIGHT, SUNRISE, SUNSET, NOT_DEFINED };
+
 class TimeSet {
 public:
     TimeSet(uint8_t hour, uint8_t minute, uint16_t duration);
@@ -41,10 +43,13 @@ public:
     
     uint8_t changeBrightness(uint8_t hour, uint8_t minute, uint8_t second);
 
+    TimeState getCurrentTimeState(uint8_t hour, uint8_t minute, uint8_t second);
+
 private:
     TimeSet *_sunRise;
     TimeSet *_sunSet;
     TimeSet *_startPoint;
+    TimeState timeState;
     // seconds
     uint32_t _endRise;
     uint32_t _startSet;

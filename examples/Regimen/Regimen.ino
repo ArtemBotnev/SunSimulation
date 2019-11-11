@@ -54,8 +54,13 @@ void loop() {
   sun->changeBrightness(tm.Hour, tm.Minute, tm.Second);
   // second way
 //  sun->changeBrightness(tm.Hour, tm.Minute, tm.Second, &brightness);
+
+    TimeState timeState = sun->getCurrentTimeState(tm.Hour, tm.Minute, tm.Second);
   
   Serial.println(brightness);
+
+  Serial.print("Current time state is = ");
+  Serial.println(timeState);
   analogWrite(LIGHT_PIN, brightness);
 
   delay(2000);
